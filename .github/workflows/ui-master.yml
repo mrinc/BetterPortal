@@ -1,0 +1,93 @@
+name: Deploy live
+concurrency: live_deploy_versioning
+
+on:
+  workflow_dispatch:
+    #inputs:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+          cache-dependency-path: web/package-lock.json
+      - run: cd web ; npm ci
+      - name: Work out version
+        id: version
+        run: node ./buildChangelogUI.js
+      - name: output version
+        run: |
+          echo "Setting version too: ${{ steps.version.outputs.version }}";
+      - run: |
+          rm ./web/src/version.js;
+          echo "export default '${{ steps.version.outputs.version }}';" >> ./web/src/version.js
+      - run: cd web ; npm version ${{ steps.version.outputs.version }}
+      - run: |
+          git config user.name "${{ secrets.NPM_NAME }}";
+          git config user.email "${{ secrets.NPM_EMAIL }}";
+          echo "Hello $(git config --get user.name)";
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: changelog.json
+          path: _changelog.json
+
+      - run: cd web ; npm run build
+
+      - name: Update site
+        uses: cloudflare/wrangler-action@2.0.0
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          command: pages publish web/dist/output --project-name=betterportal  --branch=${GITHUB_REF##*/}
+
+      - name: Update docs site changelog
+        uses: dmnemec/copy_file_to_another_repo_action@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.GIT_H_TOKEN }}
+        with:
+          source_file: "_changelog.json"
+          destination_repo: "BetterCorp/BetterPortal-Docs"
+          destination_folder: "./"
+          destination_branch: "master"
+          user_email: "${{ secrets.GIT_H_Email }}"
+          user_name: "${{ secrets.GIT_H_Username }}"
+          commit_message: "Updated changelog"
+
+      #- run: cd ui ; npm run build
+      # - run: npm test
+
+      - name: Push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          custom_tag: ${{ steps.version.outputs.version }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: ncipollo/release-action@v1
+        with:
+          tag: "v${{ steps.version.outputs.version }}"
+          name: "v${{ steps.version.outputs.version }}"
+          body: "See release: https://github.com/BetterCorp/BetterPortal-App/releases/tag/v${{ steps.version.outputs.version }}"
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: cleanup
+        if: always()
+        run: rm -f ~/.npmrc ; rm -f ./.npmrc;

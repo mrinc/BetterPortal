@@ -1,0 +1,27 @@
+$breakpoints: (xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px) !default;
+
+
+@each $breakpoint,
+$i in $breakpoints {
+  @media only screen and (max-width: $i) {
+    .hide-min-#{$breakpoint} {
+      display: none;
+    }
+    .show-max-#{$breakpoint} {
+      display: block;
+    }
+  }
+  @media only screen and (min-width: $i) {
+    .hide-max-#{$breakpoint} {
+      display: none;
+    }
+    .show-min-#{$breakpoint} {
+      display: block;
+    }
+  }
+}

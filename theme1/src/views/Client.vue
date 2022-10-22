@@ -53,15 +53,15 @@
 
 <script setup lang="ts">
 import { BetterPortal } from '@bettercorp/betterportal/src/betterportal';
-import { defaultAppFeatures, type BPv2WhoAmIDefinition } from '@/components/appConfig';
+import type { BPv2WhoAmIDefinition } from '@/components/appConfig';
 import { useAsyncState } from '@vueuse/core';
 import { defineComponent, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { VaInput, VaDataTable, VaCard, VaCardTitle, VaInnerLoading, VaCardContent, VaCardActions, VaSpacer, VaButton, VaScrollContainer } from 'vuestic-ui';
 import type { Client } from '@bettercorp/betterportal/src/auth';
 
-const betterportal = new BetterPortal();
-const appConfig = useAsyncState(betterportal.whoami.getApp<BPv2WhoAmIDefinition>(defaultAppFeatures), undefined);
+const betterportal = new BetterPortal<BPv2WhoAmIDefinition>();
+const appConfig = useAsyncState(betterportal.whoami.getApp(), undefined);
 const router = useRouter();
 const formBusy = ref(false);
 const filterClients = ref("");

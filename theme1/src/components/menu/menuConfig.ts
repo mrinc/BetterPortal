@@ -19,7 +19,7 @@ export function getMenuConfig(appConfig?: BPv2WhoAmIDefinition): MenuConfig | st
   if (appConfig.config.appType !== 3) {
     return "/App/InvalidApp";
   }
-  let splitProps = (appConfig.features.menu || "small-top").split(
+  let splitProps = (appConfig.features.menuType || "small-top").split(
     "-"
   );
   switch (splitProps[0]) {

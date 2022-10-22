@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
+import HelloWorld from "../components/HelloWorld.vue";
 import DefaultLayout from "../layouts/default.vue";
 import Login from "../views/Login.vue";
 import Client from "../views/Client.vue";
@@ -10,6 +11,12 @@ const router = createRouter({
     {
       path: "/",
       name: "home",
+      component: DefaultLayout,
+      meta: { content: HelloWorld },
+    },
+    {
+      path: "/App/UnknownApp",
+      name: "UnknownApp",
       component: DefaultLayout,
       meta: { content: HomeView },
     },

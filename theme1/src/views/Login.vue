@@ -45,6 +45,7 @@
 </template>
 
 <script setup lang="ts">
+import type { BPv2WhoAmIDefinition } from '@/components/appConfig';
 import { AuthResponse } from '@bettercorp/betterportal/src/auth';
 import { BetterPortal } from '@bettercorp/betterportal/src/betterportal';
 import { defineComponent, ref } from 'vue';
@@ -52,7 +53,7 @@ import { useRouter } from 'vue-router';
 import { VaCard, VaCardTitle, VaCardContent, VaForm, VaInput, VaInnerLoading } from 'vuestic-ui';
 import { VRules } from '../components/vuefyRules';
 
-const betterportal = new BetterPortal();
+const betterportal = new BetterPortal<BPv2WhoAmIDefinition>();
 
 const rules = VRules;
 const router = useRouter();

@@ -74,14 +74,14 @@ import { useAsyncState } from '@vueuse/core';
 import { defineComponent, ref, computed, onMounted, onBeforeUnmount, shallowRef } from 'vue';
 import { onBeforeRouteLeave, useRouter, useRoute, type RouteLocationNormalized } from 'vue-router';
 import { VaAppBar, VaButton, VaSpacer, VaButtonDropdown, VaBreadcrumbs, VaBreadcrumbsItem, VaNavbar, VaNavbarItem } from 'vuestic-ui';
-import { defaultAppFeatures, type BPv2WhoAmIDefinition } from '../appConfig';
+import type { BPv2WhoAmIDefinition } from '../appConfig';
 import type { MenuConfig } from './menuConfig';
 const version = import.meta.env.VITE_VERSION;
 
 const router = useRouter();
 const route = useRoute();
-const betterportal = new BetterPortal();
-const appConfig = useAsyncState(betterportal.whoami.getApp<BPv2WhoAmIDefinition>(defaultAppFeatures), undefined);
+const betterportal = new BetterPortal<BPv2WhoAmIDefinition>();
+const appConfig = useAsyncState(betterportal.whoami.getApp(), undefined);
 
 const props = defineProps<{
   menuConfig: MenuConfig;

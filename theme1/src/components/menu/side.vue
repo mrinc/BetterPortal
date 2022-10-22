@@ -43,7 +43,7 @@ import { VaButton, VaSidebar, VaSidebarItem, VaSidebarItemContent, VaSidebarItem
 import { BetterPortal } from "@bettercorp/betterportal/src";
 import type { MenuConfig } from './menuConfig';
 import { useAsyncState } from '@vueuse/core';
-import { defaultAppFeatures, type BPv2WhoAmIDefinition } from '../appConfig';
+import type { BPv2WhoAmIDefinition } from '../appConfig';
 
 defineComponent({
   components: {
@@ -51,8 +51,8 @@ defineComponent({
   },
 });
 
-const betterportal = new BetterPortal();
-const appConfig = useAsyncState(betterportal.whoami.getApp<BPv2WhoAmIDefinition>(defaultAppFeatures), undefined);
+const betterportal = new BetterPortal<BPv2WhoAmIDefinition>();
+const appConfig = useAsyncState(betterportal.whoami.getApp(), undefined);
 const navVisible = ref(false);
 const items = computed<{
     title: string;

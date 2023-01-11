@@ -38,7 +38,7 @@ export class VRules {
     ];
   }
   public static basicUri(propName: string) {
-    [
+    return [
       (v?: string) => !!v || `${propName} is required`,
       (v: string) =>
         /^https:\/\/.*$/.test(v) ||
@@ -52,8 +52,8 @@ export class VRules {
         `${propName} is ${256 - v.length} characters too long`,
     ];
   }
-  public static basicIntlTel(propName: string) {
-    [
+  public static basicIntlTel(propName: string):Array<any> {
+    return [
       (v?: string) => !!v || `${propName} is required`,
       (v: string) =>
         /^\+.*$/.test(v) ||
@@ -65,7 +65,7 @@ export class VRules {
     ];
   }
   public static basicRequired(propName: string) {
-    [(v?: string) => !!v || `${propName} is required`];
+    return [(v?: string) => !!v || `${propName} is required`];
   }
   public static readonly password: Array<any> = [
     (v?: string) => !!v || "Password is required",

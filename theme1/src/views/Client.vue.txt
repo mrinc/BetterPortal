@@ -2,9 +2,10 @@
   <div class="row align--center justify--center align-self--center">
     <div class="center-grid">
       <div class="item">
-        <div class="row align--center justify--center align-self--center" style="margin-bottom: 20px;">
-          <img src="https://content.betterweb.co.za/bettercorp/logos/2022/BetterPortal.png"
-            style="max-width: 100%; width: 500px; max-height: 150px;" />
+        <div class="row align--center justify--center align-self--center" style="margin-bottom: 20px;"
+          v-if="appConfig.isReady && appConfig.state.value !== undefined">
+          <img :src="appConfig.state.value.features.logo" style="max-width: 100%; width: 500px; max-height: 150px;"
+            alt="Logo" />
         </div>
         <va-card color="white" v-if="clients.length === 0">
           <va-card-title>Sorry, no clients available for you. (registration one day)
@@ -46,25 +47,34 @@
 
           </div>
         </va-inner-loading>
+        <div class="row align--center justify--center align-self--center">
+          <va-button @click="logout()" color="danger">Logout</va-button>
+        </div>
       </div>
+
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { BetterPortal } from '@bettercorp/betterportal/src/betterportal';
-import type { BPv2WhoAmIDefinition } from '@/components/appConfig';
+import { BetterPortal } from '@bettercorp/betterportal-sdk/src/betterportal';
+import type { AppFeatures, BPv2WhoAmIDefinition } from '@/components/appConfig';
 import { useAsyncState } from '@vueuse/core';
 import { defineComponent, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { VaInput, VaDataTable, VaCard, VaCardTitle, VaInnerLoading, VaCardContent, VaCardActions, VaSpacer, VaButton, VaScrollContainer } from 'vuestic-ui';
-import type { Client } from '@bettercorp/betterportal/src/auth';
+import type { Client } from '@bettercorp/betterportal-sdk/src/auth';
+import type { DataTableColumnSource } from 'vuestic-ui';
 
-const betterportal = new BetterPortal<BPv2WhoAmIDefinition>();
+const betterportal = new BetterPortal<AppFeatures, BPv2WhoAmIDefinition>();
 const appConfig = useAsyncState(betterportal.whoami.getApp(), undefined);
 const router = useRouter();
 const formBusy = ref(false);
 const filterClients = ref("");
+
+const logout = () => {
+  betterportal.auth.logout();
+  router.push('/Account/Login');
+};
 
 async function selectClient(clientId: string) {
   formBusy.value = true;
@@ -79,7 +89,6 @@ async function selectClient(clientId: string) {
 
 defineComponent({
   components: {
-    VaInput, VaDataTable, VaCard, VaCardTitle, VaInnerLoading, VaCardContent, VaCardActions, VaSpacer, VaButton, VaScrollContainer
   }
 });
 
@@ -88,12 +97,12 @@ interface ClientData extends Client {
   id: string;
 }
 let clientsData: Array<ClientData> = [];
-let clientsDataColumns = [
+let clientsDataColumns: Array<DataTableColumnSource> = [
   { key: 'name', sortable: true, width: '100%' },
-  { key: 'id', sortable: false, width: 80 },
+  { key: 'id', sortable: false, width: 80, tdAlign: 'right' },
 ];
 if (!betterportal.auth.isLoggedIn) {
-  router.replace('/App/Login');
+  router.replace('/Account/Login');
 }
 else {
   clients = Object.keys(betterportal.auth.user!.clients);

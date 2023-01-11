@@ -1,6 +1,7 @@
-import type { WhoAmIDefinition } from "@bettercorp/betterportal/src";
-import type { Config } from "@bettercorp/betterportal/src/whoami";
-import type { ColorConfig } from "vuestic-ui";
+//import type { VuesticConfigConfig } from '@/vuesticConfig';
+import type { WhoAmIDefinition } from "@bettercorp/betterportal-sdk/src";
+import type { Config } from "@bettercorp/betterportal-sdk/src/whoami";
+import type { ColorConfig, PartialGlobalConfig } from "vuestic-ui";
 
 function getValueOrDefault<T>(def: T, value?: T): T {
   if (value === undefined) return def;
@@ -9,6 +10,7 @@ function getValueOrDefault<T>(def: T, value?: T): T {
 }
 export interface AppFeatures {
   title: string;
+  description: string;
   logo: string;
   showLogin: boolean;
   clientListType: number;
@@ -16,6 +18,7 @@ export interface AppFeatures {
   colours?: ColorConfig;
   contentBackground?: string;
   menuType: string;
+  theme1?: PartialGlobalConfig;
 }
 export interface BPv2WhoAmIDefinition extends WhoAmIDefinition<AppFeatures> {}
 export function defaultAppFeatures(
@@ -34,4 +37,14 @@ export function defaultAppFeatures(
     features,
     config,
   };
+}
+export enum ComponentLoadType {
+  content = "content",
+  embedded = "embedded",
+  hidden = "hidden",
+}
+export interface Component {
+  name: string;
+  service: string;
+  LoadType: ComponentLoadType;
 }

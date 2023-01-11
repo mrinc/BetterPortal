@@ -1,18 +1,40 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
-import HelloWorld from "../components/HelloWorld.vue";
 import DefaultLayout from "../layouts/default.vue";
 import Login from "../views/Login.vue";
-import Client from "../views/Client.vue";
+import Client from "../views/Client.vue.txt";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: "/login",
+      name: "login-redirect",
+      redirect: (to) => {
+        //console.log("login page");
+        // the function receives the target route as the argument
+        // we return a redirect path/location here.
+        return {
+          name: "login",
+          query: {
+            client_id: to.query.client_id,
+            redirect_uri: to.query.redirect_uri,
+            scope: to.query.scope,
+            response_type: to.query.response_type,
+            response_mode: to.query.response_mode,
+            code_challenge_method: to.query.code_challenge_method,
+            code_challenge: to.query.code_challenge,
+            state: to.query.state,
+            nonce: to.query.nonce,
+          },
+        };
+      },
+    },
+    {
       path: "/",
       name: "home",
       component: DefaultLayout,
-      meta: { content: HelloWorld },
+      meta: { content: import("../views/profile.vue") },
     },
     {
       path: "/App/UnknownApp",
@@ -21,23 +43,23 @@ const router = createRouter({
       meta: { content: HomeView },
     },
     {
-      path: "/App/Login",
+      path: "/Account/Login",
       name: "login",
       component: DefaultLayout,
       meta: {
         content: Login,
-        breadcrumbs: ["App", "Login"],
-        lockedScroll: true
+        breadcrumbs: ["Account", "Login"],
+        lockedScroll: true,
       },
     },
     {
-      path: "/App/Client",
+      path: "/Account/Client",
       name: "client",
       component: DefaultLayout,
       meta: {
         content: Client,
-        breadcrumbs: ["App", "Login", "Client"],
-        lockedScroll: true
+        breadcrumbs: ["Account", "Client"],
+        lockedScroll: true,
       },
     },
     {

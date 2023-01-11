@@ -4,11 +4,13 @@
   <div v-else>
     <div :class="'side-menu side-menu-'+(menuConfig.posTop?'top':'bottom')" :visible="navVisible"
       :style="(menuConfig.posTop? `top: ${menuConfig.menuHeight}px;`:`bottom: ${menuConfig.menuHeight}px; `)">
-      <va-sidebar textColor="primary" color="white" minimizedWidth="64px" :minimized="false" position="left" :gradient="false">
+      <va-sidebar minimizedWidth="64px" :minimized="false" position="left"
+        :gradient="false">
         <div style="padding: 5px; text-align: center;">
-          <img :src="appConfig.state.value.features.logo"
-            style="max-width: 245px; max-height: 195px;" />
+          <img :src="appConfig.state.value.features.logo" alt="Logo" style="max-width: 245px; max-height: 195px;" />
         </div>
+        <template v-for="item in items" :key="item.title">
+        </template>
         <template v-for="item in items" :key="item.title">
           <va-sidebar-item :active="item.active" :to="item.to" :exact="item.exact" style="cursor: pointer;">
             <!-- <va-sidebar-item-content>
@@ -39,27 +41,25 @@
 <script setup lang="ts">
 import { defineComponent, computed, ref } from 'vue';
 import { useRoute, onBeforeRouteLeave } from 'vue-router';
-import { VaButton, VaSidebar, VaSidebarItem, VaSidebarItemContent, VaSidebarItemTitle, VaCheckbox, VaIcon } from 'vuestic-ui';
-import { BetterPortal } from "@bettercorp/betterportal/src";
+import { BetterPortal } from "@bettercorp/betterportal-sdk/src";
 import type { MenuConfig } from './menuConfig';
 import { useAsyncState } from '@vueuse/core';
-import type { BPv2WhoAmIDefinition } from '../appConfig';
+import type { AppFeatures, BPv2WhoAmIDefinition } from '../appConfig';
 
 defineComponent({
   components: {
-    VaButton, VaSidebar, VaSidebarItem, VaSidebarItemContent, VaSidebarItemTitle, VaCheckbox, VaIcon
   },
 });
 
-const betterportal = new BetterPortal<BPv2WhoAmIDefinition>();
+const betterportal = new BetterPortal<AppFeatures, BPv2WhoAmIDefinition>();
 const appConfig = useAsyncState(betterportal.whoami.getApp(), undefined);
 const navVisible = ref(false);
 const items = computed<{
-    title: string;
-    icon: string;
-    to: string;
-    exact?: boolean;
-    active: boolean;
+  title: string;
+  icon: string;
+  to: string;
+  exact?: boolean;
+  active: boolean;
 }[]>(() => {
   const route = useRoute();
   return [
@@ -86,11 +86,11 @@ defineExpose({
 });
 </script>
 <style scoped>
-.va-sidebar__item {
+/* .va-sidebar__item {
   border-radius: 50px;
   margin: 5px;
   width: calc(100% - 10px);
-}
+} */
 
 .side-menu-background {
   position: fixed;
@@ -100,7 +100,7 @@ defineExpose({
   bottom: 0;
   z-index: 8;
   /* background-color: var(--va-background); */
-  background-color: transparent;
+  /* background-color: transparent; */
   opacity: 0.61;
   backdrop-filter: blur(0.5px);
   transition: 250ms ease-in-out;

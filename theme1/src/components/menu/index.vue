@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      :style="(menuConfig.posTop? `top: ${menuConfig.menuHeight}px; bottom: 0px; `:`top: 0; bottom: ${menuConfig.menuHeight}px; `)+'background:'+(appConfig.isReady && appConfig.state.value !== undefined ? appConfig.state.value.features.contentBackground||'linear-gradient(45deg, rgb(0, 145, 234), rgb(0, 97, 157))':'')+'; '+(useRoute().meta.lockedScroll === true ? 'overflow-y:hidden;':'')"
+      :style="(menuConfig.posTop ? `top: ${ menuConfig.menuHeight }px; bottom: 0px; ` : `top: 0; bottom: ${ menuConfig.menuHeight }px; `) + '; ' + (useRoute().meta.lockedScroll === true ? 'overflow-y:hidden;' : '')"
       class="app_content">
       <slot></slot>
     </div>
@@ -9,12 +9,12 @@
 </template>
 
 <script setup lang="ts">
-import { BetterPortal } from '@bettercorp/betterportal/src';
+import { BetterPortal } from '@bettercorp/betterportal-sdk/src';
 import { useAsyncState } from '@vueuse/core';
-import type { BPv2WhoAmIDefinition } from '../appConfig';
+import type { AppFeatures, BPv2WhoAmIDefinition } from '../appConfig';
 import { useRoute } from 'vue-router';
 
-const betterportal = new BetterPortal<BPv2WhoAmIDefinition>();
+const betterportal = new BetterPortal<AppFeatures, BPv2WhoAmIDefinition>();
 const appConfig = useAsyncState(betterportal.whoami.getApp(), undefined);
 
 const props = defineProps({

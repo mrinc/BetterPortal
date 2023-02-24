@@ -1,0 +1,19 @@
+.va-card[card-alt]::before {
+  content: attr(card-alt);
+  display: block;
+  position: absolute;
+  width: auto;
+  height: auto;
+  padding: 5px 10px 5px 10px;
+  border-radius: var(--va-card-border-radius, var(--va-block-border-radius));
+  box-shadow: var(--va-card-box-shadow, var(--va-block-box-shadow));
+  top: 0px;
+  right: 15px;
+  min-width: 100px;
+  text-align: center;
+  color: var(--va-text-primary);
+  background: var(--va-background-element);
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+  text-transform: capitalize;
+}

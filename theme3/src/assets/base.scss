@@ -1,0 +1,59 @@
+// @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;1,700&display=swap');
+// @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+@import "./fonts/material.scss";
+@import "./fonts/sourceSansPro.scss";
+@import "./_breakpoints.scss";
+
+/* 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  position: relative;
+  font-weight: 400;
+}
+
+body {
+  min-height: 100vh;
+  font-family: v-sans, v-mono, 'Helvetica Neue', sans-serif;;
+  transition: color 0.5s, background-color 0.5s;
+  line-height: 1.6;
+  font-size: 15px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+} */
+
+.center-grid {
+  margin: 0;
+  height: 100vh;
+  /* use 100% of the height of the viewport */
+  display: grid;
+  place-items: center;
+  /*max-width: calc(100% - 30px);*/
+}
+@import "./nav.scss";
+
+.text-center {
+  text-align: center;
+}
+
+@media only screen and (max-width: 1026px) {
+  #fadeshow1 {
+    display: none;
+  }
+}
+
+.no-shrink-button .va-button>.va-button__content {
+  flex-shrink: 0;
+}
+
+.va-card__title {
+  font-size: 1.4rem;
+}
+
+.va-scroll-container__content {
+  width: 100%;
+}
